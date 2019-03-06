@@ -1,0 +1,58 @@
+@charset "utf-8";
+html,body{
+    color:#000;
+    font-size:16px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "PingFangSC-Medium", "Microsoft Yahei", sans-serif;
+}
+div,p,ul,li,ol,dl,dt,dd,span,img,input,table,h1,h2,h3,h4,h5,h6,pre{ margin:0; padding:0; border:0;}
+a {text-decoration:none;}
+/*table格式化*/
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+th,td {
+    padding: 0;
+}
+a:focus,*:focus {outline:none;}
+.clearfix:before,.clearfix:after {content:"";display:table;}
+.clearfix:after {clear:both;overflow:hidden;}
+.clearfix {zoom:1;}
+.clear {clear:both;display:block;font-size:0;height:0;line-height:0;overflow:hidden;}
+.hide {display:none;}
+.show {display:block;}
+.clearfix:after {
+    visibility:hidden;
+    display:block;
+    font-size:0;
+    content:" ";
+    clear:both;
+    height:0;
+}
+.clearfix {
+    zoom:1;
+}
+img{
+    width: 100%;
+}
+pre{
+    white-space: pre-wrap; /*css-3*/ 
+    white-space: -moz-pre-wrap; /*Mozilla,since1999*/ 
+    white-space: -pre-wrap; /*Opera4-6*/ 
+    white-space: -o-pre-wrap; /*Opera7*/ 
+    word-wrap: break-word; /*InternetExplorer5.5+*/ 
+}
+#app{
+    height: 100%;
+}
+code, kbd, pre, samp {
+    font-family: Consolas,Menlo,Courier,monospace;
+}
+
+
+
+

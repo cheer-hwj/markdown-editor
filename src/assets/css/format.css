@@ -1,0 +1,30 @@
+pre {
+    margin: 1rem;
+    padding: 1rem;
+    background-color: #f4f4f4;
+}
+code {
+    margin: 0 5px;
+    box-sizing: border-box;
+    background: #f9f2f4;
+    padding: 2px;
+    height: 1em;
+    font-size: .9em;
+    overflow: hidden;
+    border-radius: 4px;
+    color: #c7254e;
+}
+.code-lines {
+    padding-left: 3rem;
+    color: rgba(102, 128, 153, 0.4);
+    background-image: linear-gradient(to right, #eee, #eee 3rem, transparent 3rem);
+}
+h1 {
+    font-size: 1.8em;
+}
+blockquote {
+    margin: 1rem;
+    padding: 1rem 1rem 1rem 1.5rem;
+    background-color: rgba(240, 240, 240, 0.6);
+    background-image: linear-gradient(to right, #ddd, #ddd .5rem, transparent .5rem);
+}
