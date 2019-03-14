@@ -28,3 +28,9 @@ blockquote {
     background-color: rgba(240, 240, 240, 0.6);
     background-image: linear-gradient(to right, #ddd, #ddd .5rem, transparent .5rem);
 }
+ul {
+    margin: .5rem;
+}
+li {
+    margin: .5rem .5rem .5rem 1.5rem;
+}

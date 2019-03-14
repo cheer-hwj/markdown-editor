@@ -57,20 +57,8 @@ export default {
         return "<h" + n + ">" + p2 + "</h" + n + ">";
       });
       // 特殊的一级和二级标题
-      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(=+)/g, function(
-        match,
-        p1,
-        p2
-      ) {
-        return "<h1>" + p1 + "</h1>";
-      });
-      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(-+)/g, function(
-        match,
-        p1,
-        p2
-      ) {
-        return "<h2>" + p1 + "</h2>";
-      });
+      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(=+)/g, "<h1>$1</h1>");
+      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(-+)/g, "<h2>$1</h2>");
 
       /****  段落  ****/
       // 识别一开始的段落
@@ -100,7 +88,6 @@ export default {
             if (p1 && val < maxNum) {
               let m = maxNum - val;
               maxNum = val;
-              console.log(maxNum);
               return endStr.repeat(m);
             }
 
@@ -129,14 +116,14 @@ export default {
       // 识别段落中的换行(两个以上的空格加一个回车)
       outMsg = outMsg.replace(/ {2,}[\r\n]/gm, "<br>");
       /****  粗体  ****/
-      outMsg = outMsg.replace(
-        /(\*\*|__)(.*?)(\*\*|__)/g,
-        "<strong>$2</strong>"
-      );
+      // outMsg = outMsg.replace(
+      //   /\*\*(.*?)\*\*|__(.*?)__/g,
+      //   "<strong>$1$2</strong>"
+      // );
       /****  斜体  ****/
-      outMsg = outMsg.replace(/(\*|_)(.*?)(\*|_)/g, "<em>$2</em>");
+      // outMsg = outMsg.replace(/\*(.*?)\*|_(.*?)_/g, "<em>$1$2</em>");
       /****  删除线  ****/
-      outMsg = outMsg.replace(/(\~\~)(.*?)(\~\~)/g, "<del>$2</del>");
+      outMsg = outMsg.replace(/(~~)(.*?)(~~)/g, "<del>$2</del>");
       /****  下划线  ****/
       outMsg = outMsg.replace(/(\+\+)(.*?)(\+\+)/g, "<ins>$2</ins>");
       /****  行内代码  ****/
@@ -148,18 +135,46 @@ export default {
         /<\/code>\s*<\/pre>(\s*[\r\n])*<pre>\s*<code>/gm,
         "$1"
       );
+      /**** 列表 ****/
+      outMsg = outMsg.replace(
+        /(^[*+][ \t]+[\s\S]+?)(^(\s*)[\r\n](?!^[+*][ \t]))/gm,
+        function(match, p1, p2) {
+          let arr = p1.split(/(^[*+]|[1-9]\.)[ \t]+/gm);
+          let nowstr = arr[1];
+          let nowNum = !isNaN(parseInt(nowstr));
+          let arr2 = arr.map(function(val, index) {
+            let arrstr = "";
+            if (index == 0) {
+              arrstr = nowNum ? "<ol>" : "<ul>";
+            } else if (index % 2 != 0) {
+              let isNum = !isNaN(parseInt(val));
+              if (isNum) {
+                //有序列表
+                if (nowNum != isNum) {
+                  arrstr = "</ul><ol>";
+                }
+              } else if (nowNum != isNum) {
+                nowstr = val;
+                arrstr = "</ol><ul>";
+              } else if (val != nowstr) {
+                nowstr = val;
+                arrstr = "</ul><ul>";
+              }
+              nowNum = isNum;
+            } else if (index == arr.length - 1) {
+              let endstr = nowNum ? "</ol>" : "</ul>";
+              arrstr = "<li>" + val + "</li>" + endstr;
+            } else {
+              arrstr = "<li>" + val + "</li>";
+            }
+            return arrstr;
+          });
+          let result = arr2.join("") + p2;
+          return result;
+        }
+      );
       // 识别空行
       outMsg = outMsg.replace(/^(\s*)[\r\n]/gm, "</p><p>");
-      // outMsg = outMsg.replace(/```[\n\r]+([\s\S]*?)[\n\r]+```[\s]?/gi, function(match, p1){
-      //   if(!match) {
-      //       return;
-      //   }
-
-      //   let newstr = p1.replace(/[\n\r]?( ?\S+)/gi,'<li><code>$1</code></li>').replace(/[\n\r]+/gi, '<li></li>')
-
-      //   return "<pre class='code-lines'><ol>" + newstr + "</ol></pre>"
-      // });
-
       return outMsg;
     }
   },
