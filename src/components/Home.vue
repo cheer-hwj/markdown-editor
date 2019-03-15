@@ -36,6 +36,9 @@
   </div>
 </template>
 <script>
+import {listHandler} from '@/assets/js/list.js'
+import {codeHandler, codeInsert} from '@/assets/js/codeblock.js'
+import {referHandler, referInsert} from '@/assets/js/refer.js'
 export default {
   name: "Home",
   data() {
@@ -48,6 +51,14 @@ export default {
     output() {
       this.saveMsg();
       let outMsg = this.message;
+      /* ========== 分割为各个独立的部分 ==========  */
+      //代码块
+      outMsg = codeHandler(outMsg)
+      //引用
+      outMsg = referHandler(outMsg)
+
+
+
       // /(^[^\*=\-#>\t\.\+\[\]\!\\][\S\s]+)/
       /**** 反斜杠 ****/
 
@@ -69,47 +80,47 @@ export default {
       outMsg = outMsg.replace(/(<\/h[1-6]>)([\s][^<])/gm, "$1<p>$2");
 
       /****  引用  ****/
-      function searchQuote(src) {
-        if (!src.match(/^>+/gm)) return src;
+      // function searchQuote(src) {
+      //   if (!src.match(/^>+/gm)) return src;
 
-        let arr = src.match(/^>+/gm).map(val => val.length);
-        let maxNum = arr[0];
-        const startStr = "<blockquote><p>";
-        const endStr = "</p></blockquote>";
+      //   let arr = src.match(/^>+/gm).map(val => val.length);
+      //   let maxNum = arr[0];
+      //   const startStr = "<blockquote><p>";
+      //   const endStr = "</p></blockquote>";
 
-        let result = src;
-        for (let i = 0; i < arr.length; i++) {
-          result = result.replace(/(^\s*[\r\n])?(^>+)/m, function(match, p1) {
-            let val = arr[i];
-            if (i == 0) {
-              return startStr.repeat(val - 1);
-            }
+      //   let result = src;
+      //   for (let i = 0; i < arr.length; i++) {
+      //     result = result.replace(/(^\s*[\r\n])?(^>+)/m, function(match, p1) {
+      //       let val = arr[i];
+      //       if (i == 0) {
+      //         return startStr.repeat(val - 1);
+      //       }
 
-            if (p1 && val < maxNum) {
-              let m = maxNum - val;
-              maxNum = val;
-              return endStr.repeat(m);
-            }
+      //       if (p1 && val < maxNum) {
+      //         let m = maxNum - val;
+      //         maxNum = val;
+      //         return endStr.repeat(m);
+      //       }
 
-            let num = val - maxNum;
-            if (num > 0) {
-              maxNum = val;
-              return startStr.repeat(num);
-            } else return "";
-          });
-        }
-        return result + endStr.repeat(maxNum - 1);
-      }
-      outMsg = outMsg.replace(/(^>[\S\s]*?)(^\s*[\r\n])*(^[^>\s])/gm, function(
-        m,
-        p1,
-        p2,
-        p3
-      ) {
-        p1 = "<blockquote><p>" + searchQuote(p1) + "</p></blockquote>";
-        p2 = p2 || "";
-        return p1 + p2 + p3;
-      });
+      //       let num = val - maxNum;
+      //       if (num > 0) {
+      //         maxNum = val;
+      //         return startStr.repeat(num);
+      //       } else return "";
+      //     });
+      //   }
+      //   return result + endStr.repeat(maxNum - 1);
+      // }
+      // outMsg = outMsg.replace(/(^>[\S\s]*?)(^\s*[\r\n])*(^[^>\s])/gm, function(
+      //   m,
+      //   p1,
+      //   p2,
+      //   p3
+      // ) {
+      //   p1 = "<blockquote><p>" + searchQuote(p1) + "</p></blockquote>";
+      //   p2 = p2 || "";
+      //   return p1 + p2 + p3;
+      // });
       // 识别引用之后的正文
       outMsg = outMsg.replace(/(<\/blockquote>)([\s]*[^<])/gm, "$1<p>$2");
 
@@ -128,53 +139,20 @@ export default {
       outMsg = outMsg.replace(/(\+\+)(.*?)(\+\+)/g, "<ins>$2</ins>");
       /****  行内代码  ****/
       outMsg = outMsg.replace(/`([^`]+)`/g, "<code>$1</code>");
-      /****  代码块  ****/
-      // 空格或制表符
-      outMsg = outMsg.replace(/(^ {4}|\t)(.*)/gm, "<pre><code>$2</code></pre>");
-      outMsg = outMsg.replace(
-        /<\/code>\s*<\/pre>(\s*[\r\n])*<pre>\s*<code>/gm,
-        "$1"
-      );
+      
       /**** 列表 ****/
-      outMsg = outMsg.replace(
-        /(^[*+][ \t]+[\s\S]+?)(^(\s*)[\r\n](?!^[+*][ \t]))/gm,
-        function(match, p1, p2) {
-          let arr = p1.split(/(^[*+]|[1-9]\.)[ \t]+/gm);
-          let nowstr = arr[1];
-          let nowNum = !isNaN(parseInt(nowstr));
-          let arr2 = arr.map(function(val, index) {
-            let arrstr = "";
-            if (index == 0) {
-              arrstr = nowNum ? "<ol>" : "<ul>";
-            } else if (index % 2 != 0) {
-              let isNum = !isNaN(parseInt(val));
-              if (isNum) {
-                //有序列表
-                if (nowNum != isNum) {
-                  arrstr = "</ul><ol>";
-                }
-              } else if (nowNum != isNum) {
-                nowstr = val;
-                arrstr = "</ol><ul>";
-              } else if (val != nowstr) {
-                nowstr = val;
-                arrstr = "</ul><ul>";
-              }
-              nowNum = isNum;
-            } else if (index == arr.length - 1) {
-              let endstr = nowNum ? "</ol>" : "</ul>";
-              arrstr = "<li>" + val + "</li>" + endstr;
-            } else {
-              arrstr = "<li>" + val + "</li>";
-            }
-            return arrstr;
-          });
-          let result = arr2.join("") + p2;
-          return result;
-        }
-      );
+      outMsg = listHandler(outMsg)
+      /**** 分割线 ****/
+     let aa = outMsg.match(/^\s*_{3,}[_ ]*$/gm)
+     console.log(aa)
       // 识别空行
       outMsg = outMsg.replace(/^(\s*)[\r\n]/gm, "</p><p>");
+
+      /* ========== 处理并合并各个独立的部分 ==========  */
+      //代码块
+      outMsg = codeInsert(outMsg)
+      //引用
+      outMsg = referInsert(outMsg)
       return outMsg;
     }
   },
