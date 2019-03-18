@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import {listHandler} from '@/assets/js/list.js'
+import {listHandler, listInsert} from '@/assets/js/list.js'
 import {codeHandler, codeInsert} from '@/assets/js/codeblock.js'
 import {referHandler, referInsert} from '@/assets/js/refer.js'
 export default {
@@ -56,6 +56,8 @@ export default {
       outMsg = codeHandler(outMsg)
       //引用
       outMsg = referHandler(outMsg)
+      //列表
+      outMsg = listHandler(outMsg)
 
 
 
@@ -79,48 +81,6 @@ export default {
       // 识别标题之后的正文
       outMsg = outMsg.replace(/(<\/h[1-6]>)([\s][^<])/gm, "$1<p>$2");
 
-      /****  引用  ****/
-      // function searchQuote(src) {
-      //   if (!src.match(/^>+/gm)) return src;
-
-      //   let arr = src.match(/^>+/gm).map(val => val.length);
-      //   let maxNum = arr[0];
-      //   const startStr = "<blockquote><p>";
-      //   const endStr = "</p></blockquote>";
-
-      //   let result = src;
-      //   for (let i = 0; i < arr.length; i++) {
-      //     result = result.replace(/(^\s*[\r\n])?(^>+)/m, function(match, p1) {
-      //       let val = arr[i];
-      //       if (i == 0) {
-      //         return startStr.repeat(val - 1);
-      //       }
-
-      //       if (p1 && val < maxNum) {
-      //         let m = maxNum - val;
-      //         maxNum = val;
-      //         return endStr.repeat(m);
-      //       }
-
-      //       let num = val - maxNum;
-      //       if (num > 0) {
-      //         maxNum = val;
-      //         return startStr.repeat(num);
-      //       } else return "";
-      //     });
-      //   }
-      //   return result + endStr.repeat(maxNum - 1);
-      // }
-      // outMsg = outMsg.replace(/(^>[\S\s]*?)(^\s*[\r\n])*(^[^>\s])/gm, function(
-      //   m,
-      //   p1,
-      //   p2,
-      //   p3
-      // ) {
-      //   p1 = "<blockquote><p>" + searchQuote(p1) + "</p></blockquote>";
-      //   p2 = p2 || "";
-      //   return p1 + p2 + p3;
-      // });
       // 识别引用之后的正文
       outMsg = outMsg.replace(/(<\/blockquote>)([\s]*[^<])/gm, "$1<p>$2");
 
@@ -141,10 +101,9 @@ export default {
       outMsg = outMsg.replace(/`([^`]+)`/g, "<code>$1</code>");
       
       /**** 列表 ****/
-      outMsg = listHandler(outMsg)
+      // outMsg = listHandler(outMsg)
       /**** 分割线 ****/
      let aa = outMsg.match(/^\s*_{3,}[_ ]*$/gm)
-     console.log(aa)
       // 识别空行
       outMsg = outMsg.replace(/^(\s*)[\r\n]/gm, "</p><p>");
 
@@ -153,6 +112,8 @@ export default {
       outMsg = codeInsert(outMsg)
       //引用
       outMsg = referInsert(outMsg)
+      //列表
+      outMsg = listInsert(outMsg)
       return outMsg;
     }
   },

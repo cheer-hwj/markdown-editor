@@ -1,26 +1,31 @@
-let referlines = []
+import store from '@/store.js'
 export function referHandler(msg) {
-    msg = msg.replace(/(^>[\S\s]*?)(^\s*[\r\n])*(^[^>\s])/gm, function (
+    msg = msg.replace(/(^>[\S\s]*?)(^\s*[\r\n]^[^>])/gm, function (
         m,
         p1,
-        p2,
-        p3
+        p2
     ) {
-        referlines.push(searchQuote(p1))
+        store.commit('referlines/addline', p1)
         p1 = "<blockquote><p></p></blockquote>";
         p2 = p2 || "";
-        return p1 + p2 + p3;
+        return p1 + p2;
     });
+    console.log(msg)
+    // 在末尾的引用
+    
     return msg
 }
 export function referInsert(msg) {
-    if (referlines.length == 0) return msg;
-    let n = 0
-    msg = msg.replace(/<blockquote><p><\/p><\/blockquote>/gm, function () {
-        let str = "<blockquote><p>" + referlines[n] + "</p></blockquote>"
-        n++
-        return str
-    })
+    const arr = store.state.referlines.lines
+    if (arr.length > 0) {
+        let n = 0
+        msg = msg.replace(/<blockquote><p><\/p><\/blockquote>/gm, function () {
+            let str = "<blockquote><p>" + searchQuote(arr[n]) + "</p></blockquote>"
+            n++
+            return str
+        })
+        store.commit('referlines/clearline')
+    }
     return msg
 }
 
