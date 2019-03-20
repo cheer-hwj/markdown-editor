@@ -36,9 +36,11 @@
   </div>
 </template>
 <script>
-import {listHandler, listInsert} from '@/assets/js/list.js'
-import {codeHandler, codeInsert} from '@/assets/js/codeblock.js'
-import {referHandler, referInsert} from '@/assets/js/refer.js'
+import { listHandler, listInsert } from "@/assets/js/list.js";
+import { codeHandler, codeInsert } from "@/assets/js/codeblock.js";
+import { referHandler, referInsert } from "@/assets/js/refer.js";
+import { textformat } from "@/assets/js/textformat.js";
+import { paragraph, paragraphInsert } from "@/assets/js/paragraph.js";
 export default {
   name: "Home",
   data() {
@@ -53,67 +55,31 @@ export default {
       let outMsg = this.message;
       /* ========== 分割为各个独立的部分 ==========  */
       //代码块
-      outMsg = codeHandler(outMsg)
+      outMsg = codeHandler(outMsg);
       //引用
-      outMsg = referHandler(outMsg)
+      outMsg = referHandler(outMsg); 
       //列表
-      outMsg = listHandler(outMsg)
+      outMsg = listHandler(outMsg);
 
-
+      /* ========== 处理文本的格式 ==========  */
+      //段落结构
+      outMsg = paragraph(outMsg);
+      console.log(outMsg)
+      //文本格式
+      outMsg = textformat(outMsg);
+      //不受文本格式影响的段落结构
+      outMsg = paragraphInsert(outMsg);
 
       // /(^[^\*=\-#>\t\.\+\[\]\!\\][\S\s]+)/
       /**** 反斜杠 ****/
 
-      /**** 标题 ****/
-      outMsg = outMsg.replace(/^(#{1,6})([^#].*)/gm, function(match, p1, p2) {
-        let n = p1.length;
-        return "<h" + n + ">" + p2 + "</h" + n + ">";
-      });
-      // 特殊的一级和二级标题
-      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(=+)/g, "<h1>$1</h1>");
-      outMsg = outMsg.replace(/([^#\s]?.*)[\n\r]+(-+)/g, "<h2>$1</h2>");
-
-      /****  段落  ****/
-      // 识别一开始的段落
-      outMsg = outMsg.replace(/(^ {0,3}<(?!h[1-6]))/g, "<p>$&");
-      // 识别最后的段落
-      outMsg = outMsg.replace(/([^>][\s]*$)/g, "$&</p>");
-      // 识别标题之后的正文
-      outMsg = outMsg.replace(/(<\/h[1-6]>)([\s][^<])/gm, "$1<p>$2");
-
-      // 识别引用之后的正文
-      outMsg = outMsg.replace(/(<\/blockquote>)([\s]*[^<])/gm, "$1<p>$2");
-
-      // 识别段落中的换行(两个以上的空格加一个回车)
-      outMsg = outMsg.replace(/ {2,}[\r\n]/gm, "<br>");
-      /****  粗体  ****/
-      // outMsg = outMsg.replace(
-      //   /\*\*(.*?)\*\*|__(.*?)__/g,
-      //   "<strong>$1$2</strong>"
-      // );
-      /****  斜体  ****/
-      // outMsg = outMsg.replace(/\*(.*?)\*|_(.*?)_/g, "<em>$1$2</em>");
-      /****  删除线  ****/
-      outMsg = outMsg.replace(/(~~)(.*?)(~~)/g, "<del>$2</del>");
-      /****  下划线  ****/
-      outMsg = outMsg.replace(/(\+\+)(.*?)(\+\+)/g, "<ins>$2</ins>");
-      /****  行内代码  ****/
-      outMsg = outMsg.replace(/`([^`]+)`/g, "<code>$1</code>");
-      
-      /**** 列表 ****/
-      // outMsg = listHandler(outMsg)
-      /**** 分割线 ****/
-     let aa = outMsg.match(/^\s*_{3,}[_ ]*$/gm)
-      // 识别空行
-      outMsg = outMsg.replace(/^(\s*)[\r\n]/gm, "</p><p>");
-
       /* ========== 处理并合并各个独立的部分 ==========  */
       //代码块
-      outMsg = codeInsert(outMsg)
+      outMsg = codeInsert(outMsg);
       //引用
-      outMsg = referInsert(outMsg)
+      outMsg = referInsert(outMsg);
       //列表
-      outMsg = listInsert(outMsg)
+      outMsg = listInsert(outMsg);
       return outMsg;
     }
   },
@@ -179,18 +145,6 @@ export default {
           vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
       });
     }
-    // 行内代码
-    // innerCodeText() {
-    //   let vm = this;
-    //   this.textHandler(function(startn, endn) {
-    //     let newstr = "`" + vm.message.substring(startn, endn) + "`";
-    //     if (startn == endn) {
-    //       newstr = "`text`";
-    //     }
-    //     vm.message =
-    //       vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
-    //   });
-    // }
   }
 };
 </script>

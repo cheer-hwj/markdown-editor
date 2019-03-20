@@ -10,9 +10,13 @@ export function referHandler(msg) {
         p2 = p2 || "";
         return p1 + p2;
     });
-    console.log(msg)
     // 在末尾的引用
-    
+    msg = msg.replace(/^>[\S\s]*/gm, function(match) {
+        if(match) {
+            store.commit('referlines/addline', match)
+            return '<blockquote><p></p></blockquote>'
+        }
+    })
     return msg
 }
 export function referInsert(msg) {
