@@ -36,11 +36,7 @@
   </div>
 </template>
 <script>
-import { listHandler, listInsert } from "@/assets/js/list.js";
-import { codeHandler, codeInsert } from "@/assets/js/codeblock.js";
-import { referHandler, referInsert } from "@/assets/js/refer.js";
-import { textformat } from "@/assets/js/textformat.js";
-import { paragraph, paragraphInsert } from "@/assets/js/paragraph.js";
+import datahandler from '@/assets/js/datahandler.js'
 export default {
   name: "Home",
   data() {
@@ -52,35 +48,7 @@ export default {
     // 处理输出
     output() {
       this.saveMsg();
-      let outMsg = this.message;
-      /* ========== 分割为各个独立的部分 ==========  */
-      //代码块
-      outMsg = codeHandler(outMsg);
-      //引用
-      outMsg = referHandler(outMsg); 
-      //列表
-      outMsg = listHandler(outMsg);
-
-      /* ========== 处理文本的格式 ==========  */
-      //段落结构
-      outMsg = paragraph(outMsg);
-      console.log(outMsg)
-      //文本格式
-      outMsg = textformat(outMsg);
-      //不受文本格式影响的段落结构
-      outMsg = paragraphInsert(outMsg);
-
-      // /(^[^\*=\-#>\t\.\+\[\]\!\\][\S\s]+)/
-      /**** 反斜杠 ****/
-
-      /* ========== 处理并合并各个独立的部分 ==========  */
-      //代码块
-      outMsg = codeInsert(outMsg);
-      //引用
-      outMsg = referInsert(outMsg);
-      //列表
-      outMsg = listInsert(outMsg);
-      return outMsg;
+      return datahandler(this.message);
     }
   },
   methods: {

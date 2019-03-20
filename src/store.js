@@ -89,11 +89,28 @@ const linktype = {
   }
 }
 
+// 段落块
+const paralines = {
+  namespaced: true,
+  state: {
+    paras: []
+  },
+  mutations: {
+    addpara(state, payload) {
+      state.paras.push(payload)
+    },
+    clearpara(state) {
+      state.paras = []
+    }
+  }
+}
+
 export default new Vuex.Store({
   modules: {
     codelines,
     referlines,
     listlines,
+    paralines,
     codetype,
     linktype
   },

@@ -1,4 +1,5 @@
 import store from '@/store.js'
+import { textformat } from "@/assets/js/textformat.js";
 export function referHandler(msg) {
     msg = msg.replace(/(^>[\S\s]*?)(^\s*[\r\n]^[^>])/gm, function (
         m,
@@ -10,9 +11,9 @@ export function referHandler(msg) {
         p2 = p2 || "";
         return p1 + p2;
     });
-    // 在末尾的引用
-    msg = msg.replace(/^>[\S\s]*/gm, function(match) {
-        if(match) {
+    // 在末尾的处理
+    msg = msg.replace(/^>[\S\s]*/gm, function (match) {
+        if (match) {
             store.commit('referlines/addline', match)
             return '<blockquote><p></p></blockquote>'
         }
@@ -32,27 +33,26 @@ export function referInsert(msg) {
     }
     return msg
 }
-
 function searchQuote(src) {
     if (!src.match(/^>+/gm)) return src;
 
     let arr = src.match(/^>+/gm).map(val => val.length);
     let maxNum = arr[0];
-    const startStr = "<blockquote><p>";
-    const endStr = "</p></blockquote>";
+    const startStr = "<blockquote><p>"
+    const endStr = "</p></blockquote>"
 
-    let result = src;
+    let result = textformat(src)
     for (let i = 0; i < arr.length; i++) {
         result = result.replace(/(^\s*[\r\n])?(^>+)/m, function (match, p1) {
             let val = arr[i];
             if (i == 0) {
-                return startStr.repeat(val - 1);
+                return startStr.repeat(val - 1)
             }
 
             if (p1 && val < maxNum) {
-                let m = maxNum - val;
-                maxNum = val;
-                return endStr.repeat(m);
+                let m = maxNum - val
+                maxNum = val
+                return endStr.repeat(m)
             }
 
             let num = val - maxNum;

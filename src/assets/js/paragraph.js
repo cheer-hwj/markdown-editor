@@ -1,6 +1,7 @@
 import store from '@/store.js'
+import { textformat } from "@/assets/js/textformat.js"
 /**** 标题 ****/
-export function header(msg) {
+function header(msg) {
     msg = msg.replace(/^(#{1,6})([^#].*)/gm, function (match, p1, p2) {
         let n = p1.length;
         return "<h" + n + ">" + p2 + "</h" + n + ">";
@@ -10,50 +11,6 @@ export function header(msg) {
     msg = msg.replace(/([^#\s]?.*)[\n\r]+(-+)/g, "<h2>$1</h2>");
     return msg
 }
-/**** 段落 ****/
-export function parahandler(msg) {
-    let m = 0
-    let n = 0
-    let i = 0
-    let matches = 0
-    msg = msg.replace(/^(?!\s*<(?:h[1-6]|ul|pre|blockquote|ol))([\s\S]+?)([\r\n]^<(?:h[1-6]|ul|pre|blockquote|ol))/gmi, function (match, p1, p2, offset) {
-        m += 7
-        matches = offset + p1.length
-        p1 = spacetype(p1, t => { i += 7 - t.length })
-        p1 = brtype(p1, t => { n += 4 - t.length })
-        return '<p>' + p1 + '</p>' + p2
-    })
-    // 在末尾的处理
-    let laststr = matches + m + n //取得最后一次匹配的位置
-    let src = msg.slice(laststr, -1)
-    src = src.replace(/^(?!\s*<(?:h[1-6]|ul|pre|blockquote|ol))([\s\S]+)/gmi, function (m, p1) {
-        p1 = spacetype(p1)
-        p1 = brtype(p1)
-        return '<p>' + p1 + '</p>'
-    })
-    msg = msg.slice(0, laststr) + src
-    return msg
-}
-// 识别段落中的换行(两个以上的空格加一个回车)
-export function brtype(msg, func) {
-    return msg.replace(/ {2,}[\r\n]/gm, function (match) {
-        if (func) {
-            func(match)
-        }
-        return "<br>"
-    });
-}
-// 识别空行
-export function spacetype(msg, func) {
-    return msg.replace(/(\S[\r\n]*)(^\s*[\r\n]+)(\S)/gm, function (match, p1, p2, p3) {
-        if (func) {
-            func(p2)
-        }
-        return p1 + "</p><p>" + p3
-    });
-}
-// outMsg = outMsg.replace(/^(\s*)[\r\n]/gm, "</p><p>");
-
 /**** 分割线 ****/
 function separator(msg) {
     return msg.replace(/^([\s*_]+)$/gm, function (match, p1) {
@@ -66,9 +23,29 @@ function separator(msg) {
         else return match
     });
 }
-
+/**** 段落 ****/
+function parahandler(msg) {
+    msg = msg.replace(/^(?!\s*<(?:h[1-6]|ul|pre|blockquote|ol))([\s\S]+?)([\r\n]^<(?:h[1-6]|ul|pre|blockquote|ol))/gmi, function (match, p1, p2) {
+        store.commit('paralines/addpara', p1)
+        return '<p class="paralines"></p>' + p2
+    })
+    // 在末尾的处理
+    msg = msg.replace(/^(?!\s*<(?:h[1-6]|ul|pre|blockquote|ol|p))([\s\S]+)/gmi, function (m, p1) {
+        store.commit('paralines/addpara', p1)
+        return '<p class="paralines"></p>'
+    })
+    return msg
+}
+// 识别段落中的空行
+function spacetype(msg, func) {
+    return msg.replace(/(\S[\s\r\n]*)(^\s*[\r\n]+)(\S)/gm, function (match, p1, p2, p3) {
+        if (func) {
+            func(p2)
+        }
+        return p1 + '</p><p>' + p3
+    });
+}
 //不受文本格式影响的段落结构
-
 /****  标记行内代码  ****/
 function codetype(msg) {
     return msg.replace(/`([^`]+)`/g, function (match, p1) {
@@ -128,17 +105,32 @@ function linkInsert(msg) {
     }
     return msg
 }
-export function paragraph(msg) {
+function paradata(msg) {
     msg = codetype(msg)
     msg = linktype(msg)
+    msg = spacetype(msg)
+    msg = textformat(msg)
+    msg = linkInsert(msg)
+    msg = codeInsert(msg)
+    return msg
+}
+export function textstructure(msg) {
     msg = header(msg)
     msg = separator(msg)
     msg = parahandler(msg)
     return msg
 }
 
-export function paragraphInsert(msg) {
-    msg = linkInsert(msg)
-    msg = codeInsert(msg)
+export function paraInsert(msg) {
+    const arr = store.state.paralines.paras
+    if (arr.length > 0) {
+        let n = 0
+        msg = msg.replace(/<p class="paralines"><\/p>/gi, function () {
+            let str = '<p>' + paradata(arr[n]) + '</p>'
+            n++
+            store.commit('paralines/clearpara')
+            return str
+        })
+    }
     return msg
 }
