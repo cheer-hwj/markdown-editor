@@ -1,5 +1,5 @@
 import store from '@/store.js'
-import { textformat } from "@/assets/js/textformat.js";
+import { header, textformat } from "@/assets/js/textformat.js";
 export function referHandler(msg) {
     msg = msg.replace(/(^>[\S\s]*?)(^\s*[\r\n]^[^>])/gm, function (
         m,
@@ -41,7 +41,7 @@ function searchQuote(src) {
     const startStr = "<blockquote><p>"
     const endStr = "</p></blockquote>"
 
-    let result = textformat(src)
+    let result = src
     for (let i = 0; i < arr.length; i++) {
         result = result.replace(/(^\s*[\r\n])?(^>+)/m, function (match, p1) {
             let val = arr[i];
@@ -62,5 +62,7 @@ function searchQuote(src) {
             } else return "";
         });
     }
+    result = header(result)
+    result = textformat(result)
     return result + endStr.repeat(maxNum - 1);
 }

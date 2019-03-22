@@ -1,32 +1,6 @@
 <template>
   <div>
-    <nav>
-      <ul>
-        <li title="加粗" @click="boldText">
-          <strong>B</strong>
-        </li>
-        <li title="斜体" @click="obliqueText">
-          <i>I</i>
-        </li>
-        <li title="删除线" @click="delText">
-          <del>S</del>
-        </li>
-        <li title="下划线" @click="underlineText">
-          <ins>U</ins>
-        </li>
-        <li title="行内代码">innercode</li>
-        <li>link</li>
-        <li>img</li>
-        <li>mark</li>
-        <li>h1</li>
-        <li>h2</li>
-        <li>h3</li>
-        <li>h4</li>
-        <li>h5</li>
-        <li>h6</li>
-        <li>——</li>
-      </ul>
-    </nav>
+    <ruleHeader v-on:addrule="addRule"></ruleHeader>
     <article>
       <section class="draft">
         <textarea v-model="message" spellcheck="false" ref="inputSelect"></textarea>
@@ -36,13 +10,18 @@
   </div>
 </template>
 <script>
+import ruleHeader from '@/components/ruleHeader'
 import datahandler from '@/assets/js/datahandler.js'
+import { dataRule } from '@/assets/js/rulehandler.js'
 export default {
   name: "Home",
   data() {
     return {
       message: localStorage.getItem("message") || ""
     };
+  },
+  components: {
+    ruleHeader,
   },
   computed: {
     // 处理输出
@@ -56,84 +35,13 @@ export default {
     saveMsg() {
       localStorage.setItem("message", this.message);
     },
-    //处理输入
-    textHandler(func) {
-      let inputSelect = this.$refs.inputSelect;
-      const startn = inputSelect.selectionStart;
-      const endn = inputSelect.selectionEnd;
-      func(startn, endn);
-      inputSelect.focus();
-      inputSelect.select();
+    addRule(type) {
+       this.message = dataRule(type, this.message, this.$refs.inputSelect)
     },
-    // 粗体
-    boldText() {
-      let vm = this;
-      this.textHandler(function(startn, endn) {
-        let newstr = "**" + vm.message.substring(startn, endn) + "**";
-        if (startn == endn) {
-          newstr = "**text**";
-        }
-        vm.message =
-          vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
-      });
-    },
-    // 斜体
-    obliqueText() {
-      let vm = this;
-      this.textHandler(function(startn, endn) {
-        let newstr = "*" + vm.message.substring(startn, endn) + "*";
-        if (startn == endn) {
-          newstr = "*text*";
-        }
-        vm.message =
-          vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
-      });
-    },
-    // 删除线
-    delText() {
-      let vm = this;
-      this.textHandler(function(startn, endn) {
-        let newstr = "~~" + vm.message.substring(startn, endn) + "~~";
-        if (startn == endn) {
-          newstr = "~~text~~";
-        }
-        vm.message =
-          vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
-      });
-    },
-    //下划线
-    underlineText() {
-      let vm = this;
-      this.textHandler(function(startn, endn) {
-        let newstr = "++" + vm.message.substring(startn, endn) + "++";
-        if (startn == endn) {
-          newstr = "++text++";
-        }
-        vm.message =
-          vm.message.substring(0, startn) + newstr + vm.message.substring(endn);
-      });
-    }
   }
 };
 </script>
 <style scoped>
-nav {
-  border-bottom: 1px solid #ccc;
-  background: #fff;
-}
-ul {
-  display: flex;
-  list-style-type: none;
-  align-items: center;
-  justify-content: space-around;
-}
-nav li {
-  line-height: 3rem;
-  cursor: pointer;
-}
-nav li:hover {
-  color: rgb(12, 98, 179);
-}
 article {
   display: flex;
 }

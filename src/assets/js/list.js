@@ -12,10 +12,10 @@ export function listHandler(msg) {
   // 在末尾的引用
   msg = msg.replace(/^([*+]|[1-9]\.)[ \t]+[\s\S]+/gm, function (match) {
     if (match) {
-        store.commit('listlines/addline', match)
-        return '<ul class="pre-list"></ul>'
+      store.commit('listlines/addline', match)
+      return '<ul class="pre-list"></ul>'
     }
-})
+  })
   return msg
 }
 export function listInsert(msg) {
@@ -33,7 +33,7 @@ export function listInsert(msg) {
 }
 
 function listData(src) {
-  let result = textformat(src)
+  let result = src
   let arr = result.split(/(^[*+]|[1-9]\.)[ \t]+/gm);
   if (arr.length > 0) {
     let nowstr = arr[1];
@@ -42,7 +42,8 @@ function listData(src) {
       let arrstr = "";
       if (index == 0) {
         arrstr = nowNum ? "<ol>" : "<ul>";
-      } else if (index % 2 != 0) {
+      }
+      else if (index % 2 != 0) {//标记
         let isNum = !isNaN(parseInt(val));
         if (isNum) {
           //有序列表
@@ -57,11 +58,15 @@ function listData(src) {
           arrstr = "</ul><ul>";
         }
         nowNum = isNum;
-      } else if (index == arr.length - 1) {
-        let endstr = nowNum ? "</ol>" : "</ul>";
-        arrstr = "<li>" + val + "</li>" + endstr;
-      } else {
-        arrstr = "<li>" + val + "</li>";
+      }
+      else {//列表内容
+        val = textformat(val)
+        if (index == arr.length - 1) {
+          let endstr = nowNum ? "</ol>" : "</ul>";
+          arrstr = "<li>" + val + "</li>" + endstr;
+        } else {
+          arrstr = "<li>" + val + "</li>";
+        }
       }
       return arrstr;
     });

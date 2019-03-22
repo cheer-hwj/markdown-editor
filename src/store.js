@@ -69,7 +69,7 @@ const codetype = {
       state.words.push(payload)
     },
     clearword(state) {
-      state.lines = []
+      state.words = []
     }
   },
 }
@@ -104,8 +104,104 @@ const paralines = {
     }
   }
 }
+const rules = {
+  // 标记的类型 0:around, 1: front, 2: insert data, 3: insert mark
+  bold: {
+    mark: '**',
+    bg: 'b',
+    title: '加粗',
+    type: 0
+  },
+  em: {
+    mark: '*',
+    bg: 'I',
+    title: '斜体',
+    type: 0
+  },
+  del: {
+    mark: '~~',
+    bg: 'del',
+    title: '删除线',
+    type: 0
+  },
+  underline: {
+    mark: '++',
+    bg: 'underline',
+    title: '下划线',
+    type: 0
+  },
+  inlinecode: {
+    mark: '`',
+    bg: 'mark',
+    title: '标记',
+    type: 0
+  },
+  h1: {
+    mark: '#',
+    bg: 'h1',
+    title: '一级标题',
+    type: 1
+  },
+  h2: {
+    mark: '##',
+    bg: 'h2',
+    title: '二级标题',
+    type: 1
+  },
+  h3: {
+    mark: '###',
+    bg: 'h3',
+    title: '三级标题',
+    type: 1
+  },
+  quote: {
+    mark: '>',
+    bg: 'Q',
+    title: '引用',
+    type: 1
+  },
+  ul: {
+    mark: '+ ',
+    bg: 'ul',
+    title: '无序标题',
+    type: 1
+  },
+  ol: {
+    mark: '1. ',
+    bg: 'ol',
+    title: '有序标题',
+    type: 1
+  },
+  code: {
+    mark: '```',
+    bg: 'code',
+    title: '代码块',
+    type: 2
+  },
+  hr: {
+    mark: '\n***\n',
+    bg: 'hr',
+    title: '分割线',
+    type: 3
+  },
+  link: {
+    mark: '[text](href "title")',
+    bg: 'link',
+    title: '链接',
+    type: 3
+  },
+  img: {
+    mark: '![description](src "imgtitle")',
+    bg: 'img',
+    title: '图片',
+    type: 3
+  }
+}
 
 export default new Vuex.Store({
+  state: {
+    rules,
+  },
   modules: {
     codelines,
     referlines,
