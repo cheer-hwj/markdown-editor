@@ -1,5 +1,5 @@
 import store from '@/store.js'
-import { header, textformat } from "@/assets/js/textformat.js";
+import { textformat } from "@/assets/js/textformat.js";
 export function referHandler(msg) {
     msg = msg.replace(/(^>[\S\s]*?)(^\s*[\r\n]^[^>])/gm, function (
         m,
@@ -62,7 +62,6 @@ function searchQuote(src) {
             } else return "";
         });
     }
-    result = header(result)
     result = textformat(result)
     return result + endStr.repeat(maxNum - 1);
 }
