@@ -61,17 +61,13 @@ export default {
       }
       const content = this.message;
       const elem = document.createElement("a");
-      elem.download = "draft.md";
+      elem.download = this.draftname || 'draft' + ".md";
       elem.style.display = "none";
       const blob = new Blob([content], { type: "text/plain" });
       elem.href = URL.createObjectURL(blob);
       document.body.appendChild(elem);
       elem.click();
       document.body.removeChild(elem);
-      setTimeout(() => {
-        this.message = "";
-        localStorage.removeItem("message");
-      }, 300);
     }
   }
 };
@@ -123,7 +119,7 @@ nav {
 }
 .content {
   display: flex;
-  height: calc(100vh - 6rem - 8px);
+  height: calc(100vh - 6rem - 10px);
 }
 section {
   box-sizing: border-box;

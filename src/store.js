@@ -107,90 +107,105 @@ const paralines = {
 const rules = {
   // 标记的类型 0:around, 1: front, 2: insert data, 3: insert mark
   bold: {
+    id: 0,
     mark: '**',
-    bg: 'b',
+    bg: 'B',
     title: '加粗',
     type: 0
   },
   em: {
+    id: 1,
     mark: '*',
     bg: 'I',
     title: '斜体',
     type: 0
   },
   del: {
+    id: 2,
     mark: '~~',
     bg: 'del',
     title: '删除线',
     type: 0
   },
   underline: {
+    id: 3,
     mark: '++',
     bg: 'underline',
     title: '下划线',
     type: 0
   },
   inlinecode: {
+    id: 4,
     mark: '`',
     bg: 'mark',
     title: '标记',
     type: 0
   },
   h1: {
+    id: 5,
     mark: '#',
     bg: 'h1',
     title: '一级标题',
     type: 1
   },
   h2: {
+    id: 6,
     mark: '##',
     bg: 'h2',
     title: '二级标题',
     type: 1
   },
   h3: {
+    id: 7,
     mark: '###',
     bg: 'h3',
     title: '三级标题',
     type: 1
   },
   quote: {
+    id: 8,
     mark: '>',
     bg: 'Q',
     title: '引用',
     type: 1
   },
   ul: {
+    id: 9,
     mark: '+ ',
     bg: 'ul',
     title: '无序标题',
     type: 1
   },
   ol: {
+    id: 10,
     mark: '1. ',
     bg: 'ol',
     title: '有序标题',
     type: 1
   },
   code: {
+    id: 11,
     mark: '```',
     bg: 'code',
     title: '代码块',
     type: 2
   },
   hr: {
+    id: 12,
     mark: '\n***\n',
     bg: 'hr',
     title: '分割线',
     type: 3
   },
   link: {
+    id: 13,
     mark: '[text](href "title")',
     bg: 'link',
     title: '链接',
     type: 3
   },
   img: {
+    id: 14,
     mark: '![description](src "imgtitle")',
     bg: 'img',
     title: '图片',

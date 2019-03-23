@@ -4,6 +4,7 @@
       :bg="val.bg"
       :type="key"
       :title="val.title"
+      :id="val.id"
       v-on="$listeners"
       v-for="(val, key) in rules"
       :key="key"
@@ -13,12 +14,15 @@
 <script>
 import store from "@/store.js";
 const navBtn = {
-  props: ["bg", "type", "title"],
+  props: ["bg", "type", "title", "id"],
   render(createElement) {
     let li = createElement("li", {
+      style: {
+        backgroundPositionX: -this.id*50 + 'px'
+      },
       domProps: {
-        innerText: this.bg,
-        title: this.title
+        // innerText: this.bg,
+        title: this.title,
       },
       on: {
         click: this.clickHandler
@@ -63,11 +67,15 @@ ul {
   background: #4074b4;
 }
 nav li {
-  line-height: 3rem;
+  line-height: 50px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
   color: #fff;
+  background: url("../assets/img/header.png") no-repeat top;
 }
 nav li:hover {
   color: #ffe788;
+  background-position-y: bottom;
 }
 </style>
