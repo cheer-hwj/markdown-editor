@@ -70,7 +70,6 @@ li {
   background: url("../assets/img/header.png") no-repeat top;
 }
 li:hover {
-  color: #ffe788;
   background-position-y: bottom;
 }
 @media screen and (max-width: 500px) {

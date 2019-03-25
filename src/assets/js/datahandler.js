@@ -11,7 +11,7 @@ function html2Escape(sHtml) {
 }
 //反斜杠转义
 function blashEscape(msg) {
-      return msg.replace(/\\([#*=\->.+[\]!\\()])/g, function (m, p1) {
+      return msg.replace(/\\([#*=\->.+~`_[\]!\\()])/g, function (m, p1) {
             return '&#' + p1.charCodeAt() + ';';
       })
 }
