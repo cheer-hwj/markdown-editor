@@ -134,3 +134,6 @@ console.log("My Markdown Editor.");
 ### 5. 反斜杠`\`
 相当于**反转义**作用。使符号成为普通符号。
 
+**注：**
+图标部分来自[iconfont](https://www.iconfont.cn/ "iconfont")
+
