@@ -20,6 +20,8 @@
     "eslint-plugin-vue": "^5.0.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-pxtorem": "^4.0.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {
@@ -38,7 +40,13 @@
   },
   "postcss": {
     "plugins": {
-      "autoprefixer": {}
+      "autoprefixer": {},
+      "postcss-pxtorem": {
+        "rootValue": 16,
+        "propList": [
+          "*"
+        ]
+      }
     }
   },
   "browserslist": [

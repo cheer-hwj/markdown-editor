@@ -192,7 +192,7 @@ const rules = {
   },
   hr: {
     id: 12,
-    mark: '\n***\n',
+    mark: '\n\n***\n',
     bg: 'hr',
     title: '分割线',
     type: 3
