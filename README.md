@@ -1,7 +1,7 @@
 ## 简介
 这是一个很简单的在线markdown编辑器Demo，可以对文本进行实时预览，纯前端实现，支持导出文本。
 
-支持最基本的Markdown语法，更多功能有待完善。
+支持最基本的Markdown语法，更多功能有待完善。[点击试用](./dist)
 
 ## 基本语法
 > 语法规则部分参考[traditonal markdown](https://github.com/younghz/Markdown)
@@ -123,10 +123,10 @@ console.log("My Markdown Editor.");
 ### 4. 链接和图片
 #### 4.1  链接 
 `[]`内为链接的文本，`()`内为链接地址。若`()`内有空格，前半部分为链接地址，后半部分用引号`"`或`'`标记的为链接的title。
-> \[MarkdownEditor\]\(https:// "Markdown"\)。  
+> \[MarkdownEditor\]\(https://github.com/cheer-hwj/markdown-editor "Markdown"\)。  
 
 效果：
-> [MarkdownEditor](https:// "Markdown")。
+> [MarkdownEditor](https://github.com/cheer-hwj/markdown-editor "Markdown")。
 
 #### 4.2  图片 
 添加图片的形式和链接相似，只需在链接的基础上前方加一个`！`。
