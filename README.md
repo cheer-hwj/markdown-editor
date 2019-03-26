@@ -1,7 +1,7 @@
 ## 简介
 这是一个很简单的在线markdown编辑器Demo，可以对文本进行实时预览，纯前端实现，支持导出文本。
 
-支持最基本的Markdown语法，更多功能有待完善。[点击试用](./dist)
+支持最基本的Markdown语法，更多功能有待完善。[点击试用](https://cheer-hwj.github.io/markdown-editor/dist/)
 
 ## 基本语法
 > 语法规则部分参考[traditonal markdown](https://github.com/younghz/Markdown)
