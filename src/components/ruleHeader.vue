@@ -76,6 +76,9 @@ li:hover {
   ul {
     flex-flow: row wrap;
     justify-content: space-between;
+    li {
+      background: url("../assets/img/header@2x.png") no-repeat top/750px;
+    }
     li:nth-child(8) {
       display: none;
     }
